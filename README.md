@@ -1,0 +1,1 @@
+# @basuapi_adapter

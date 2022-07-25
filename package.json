@@ -1,0 +1,41 @@
+{
+  "name": "@basuapi/adapter",
+  "packageManager": "yarn@3.2.2",
+  "bin": "./dist/bin/install.js",
+  "version": "1.0.1",
+  "files": ["dist/*.js", "dist/**/&.js"],
+  "scripts": {
+    "dev": "concurrently \"npm run watch-compile\" \"npm run watch-dev\"",
+    "watch-compile": "swc src -w --out-dir dist",
+    "watch-dev": "nodemon --watch \"dist/**/*\" -e js ./dist/index.js",
+    "build": "swc src --out-dir dist",
+    "start": "NODE_ENV=dev && node dist/index.js",
+    "cli": "yarn clean && yarn build && NODE_ENV=dev && node dist/bin/adapter.js",
+    "clean": "rm -rf dist",
+    "test": "ts-jest",
+    "module:publish": "yarn clean && yarn build && yarn publish --access=public",
+    "adapter:basuapi-express-adapter:build": "yarn build && cd adapters/basuapi-express-adapter && yarn build",
+    "adapter:basuapi-express-adapter:generate": "yarn build && npx @@basuapi/basuapi-express-adapter generate",
+    "adapter:express-adapter:build": "yarn build && cd adapters/express-adapter && yarn build",
+    "adapter:express-adapter:generate": "yarn build && npx @@basuapi/express-adapter generate"
+  },
+  "devDependencies": {
+    "@swc/cli": "^0.1.57",
+    "@swc/core": "^1.2.218",
+    "@types/commander": "^2.12.2",
+    "@types/node": "^18.0.6",
+    "@types/nunjucks": "^3",
+    "chokidar": "^3.5.3",
+    "concurrently": "^7.3.0",
+    "jest": "^28.1.3",
+    "nodemon": "^2.0.19",
+    "ts-jest": "^28.0.7",
+    "typescript": "^4.7.4"
+  },
+  "dependencies": {
+    "@basuapi/api": "^1.0.59",
+    "commander": "^9.4.0",
+    "nunjucks": "^3.2.3",
+    "recursive-copy": "^2.0.14"
+  }
+}

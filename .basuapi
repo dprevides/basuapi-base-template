@@ -1,0 +1,7 @@
+{
+  "folder": "adapters/express-adapter",
+  "route": "dist/test.routes",
+  "mergeDependencies": true,
+  "language": "typescript",
+  "applicationFolder": "dist"
+}

@@ -1,0 +1,26 @@
+import {JSONAPIDataResponse } from '@basuapi/api';
+import {Request,Response} from 'express';
+import express from 'express';
+{% for item in item.imports %}
+{{ item }}
+{% endfor %}
+
+const app = express();
+const port = {{ port }}
+
+{% for m in methods %}
+app.{{ m.item.method }}('{{ m.item.route }}', async (req:Request, res:Response) => {
+  const result = await {{routeMethod}}{{m.routePath}}.{{m.method}}(getParamData(req,res)) as any as JSONAPIDataResponse;
+  res.status(result.status).send(JSON.stringify(result.data));
+})
+{% endfor %}
+
+app.listen(port, () => {
+  console.log(`Example app listening on port ${port}`)
+})
+
+
+
+export const getParamData = (req:Request) => {
+  return {...req};
+}
