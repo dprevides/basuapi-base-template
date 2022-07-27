@@ -2,8 +2,11 @@
   "name": "@basuapi/adapter",
   "packageManager": "yarn@3.2.2",
   "bin": "./dist/bin/install.js",
-  "version": "1.0.1",
-  "files": ["dist/*.js", "dist/**/&.js"],
+  "version": "1.0.7",
+  "files": [
+    "dist/*.js",
+    "dist/**/&.js"
+  ],
   "scripts": {
     "dev": "concurrently \"npm run watch-compile\" \"npm run watch-dev\"",
     "watch-compile": "swc src -w --out-dir dist",
@@ -13,11 +16,7 @@
     "cli": "yarn clean && yarn build && NODE_ENV=dev && node dist/bin/adapter.js",
     "clean": "rm -rf dist",
     "test": "ts-jest",
-    "module:publish": "yarn clean && yarn build && yarn publish --access=public",
-    "adapter:basuapi-express-adapter:build": "yarn build && cd adapters/basuapi-express-adapter && yarn build",
-    "adapter:basuapi-express-adapter:generate": "yarn build && npx @@basuapi/basuapi-express-adapter generate",
-    "adapter:express-adapter:build": "yarn build && cd adapters/express-adapter && yarn build",
-    "adapter:express-adapter:generate": "yarn build && npx @@basuapi/express-adapter generate"
+    "module:publish": "yarn clean && yarn build && yarn publish --access=public"
   },
   "devDependencies": {
     "@swc/cli": "^0.1.57",
