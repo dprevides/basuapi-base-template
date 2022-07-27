@@ -2,7 +2,7 @@
   "name": "@basuapi/adapter",
   "packageManager": "yarn@3.2.2",
   "bin": "./dist/bin/install.js",
-  "version": "1.0.15",
+  "version": "1.0.16",
   "files": [
     "dist/src/*.js",
     "dist/src/*.d.ts",
