@@ -2,7 +2,7 @@
   "name": "@basuapi/adapter",
   "packageManager": "yarn@3.2.2",
   "bin": "./dist/bin/install.js",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "files": [
     "dist/*.js",
     "dist/**/&.js"
@@ -11,7 +11,7 @@
     "dev": "concurrently \"npm run watch-compile\" \"npm run watch-dev\"",
     "watch-compile": "swc src -w --out-dir dist",
     "watch-dev": "nodemon --watch \"dist/**/*\" -e js ./dist/index.js",
-    "build": "swc src --out-dir dist",
+    "build": "tsc -p .",
     "start": "NODE_ENV=dev && node dist/index.js",
     "cli": "yarn clean && yarn build && NODE_ENV=dev && node dist/bin/adapter.js",
     "clean": "rm -rf dist",
