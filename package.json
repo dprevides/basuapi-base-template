@@ -2,10 +2,10 @@
   "name": "@basuapi/adapter",
   "packageManager": "yarn@3.2.2",
   "bin": "./dist/bin/install.js",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "files": [
-    "dist/*.js",
-    "dist/**/&.js"
+    "dist/src/*.js",
+    "dist/src/**/&.js"
   ],
   "scripts": {
     "dev": "concurrently \"npm run watch-compile\" \"npm run watch-dev\"",
