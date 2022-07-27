@@ -1,9 +1,17 @@
 import { Command, program } from 'commander';
 import path from 'path';
 import fs from 'fs';
-import { BaseAdapter } from './base-adater';
 
-export class BaseAdapterClient {
+export class BaseConfig {
+  route!:string
+  folder!:string
+  mergeDependencies!:boolean
+  language!:string
+  applicationFolder!:string
+  name!:string
+  replaceFiles!:boolean
+}
+export abstract class BaseAdapterClient<T extends BaseConfig> {
   commander: Command = program;
 
   constructor(
@@ -31,7 +39,7 @@ export class BaseAdapterClient {
     return JSON.parse(fs.readFileSync(path.join(this.projectPath,"package.json")).toString());
   }
 
-  protected getConfig(){
+  protected getConfig() : T{
     return JSON.parse(fs.readFileSync(path.join(this.projectPath,this.configName)).toString());
   }
 
@@ -80,6 +88,9 @@ export class BaseAdapterClient {
     const packageInfo = this.getPackageInfo();
     this.addToSection(packageInfo.scripts,`adapter:${this.name}:build`,`yarn build && cd ${options.folder} && yarn build`);
     this.addToSection(packageInfo.scripts,`adapter:${this.name}:generate`,`yarn build && npx @${this.packageName} generate`);
+    this.addToSection(packageInfo.scripts,`adapter:${this.name}:start`,`cd ${options.folder} && yarn build && node api/index.js`);
+    this.addToSection(packageInfo.scripts,`adapter:${this.name}:start:debug`,`cd ${options.folder} && yarn build && node --inspect-brk api/index.js`);
+
     fs.writeFileSync(path.join(this.projectPath,"package.json"), JSON.stringify(packageInfo,null,2));
 
     //Creating the config file
@@ -110,12 +121,12 @@ export class BaseAdapterClient {
       .option('--language <language>', this.getMessages().languageArgumentDescription)
       .option('--applicationfolder <applicationfolder>', this.getMessages().applicationFolderArgumentDescription)
       .option('--replace-files <replacefiles>', this.getMessages().replaceFilesArgumentDescription)
-      .action((options) => {
-        return this.getActionCommandGenerate(options);
+      .action(async (options) => {
+        return await this.getActionCommandGenerate(options);
       });
   }
 
-  protected getActionCommandGenerate(options:{route:string, folder:string, mergedeps:string, language:string, applicationfolder:string, replacefiles:string}){
+  protected async getActionCommandGenerate(options:{route:string, folder:string, mergedeps:string, language:string, applicationfolder:string, replacefiles:string}){
     //Loading params from config
     const config = this.getConfig();
     if (!config && options.route){
@@ -130,7 +141,7 @@ export class BaseAdapterClient {
     let optionsFolder = config.folder;
     let mergeDependencies:boolean = config.mergeDependencies != null ? config.mergeDependencies : true;
     let language:string = config.language != null ? config.language : "typescript";
-    let applicationFolder = config.applicationfolder ? config.applicationfolder : 'dist'
+    let applicationFolder = config.applicationFolder ? config.applicationFolder : 'dist'
     let replaceFiles = false;
 
     if (options.route){
@@ -157,12 +168,24 @@ export class BaseAdapterClient {
       replaceFiles = options.replacefiles.toLowerCase() === "true" ? true : false;
     }
 
-    const baseAdapter = new BaseAdapter(optionsRoute,optionsFolder, mergeDependencies, language,applicationFolder, this.name, replaceFiles, this.getConfig());
-    baseAdapter.init();
+    const customConfig = {
+      ...this.getConfig(),
+      route: optionsRoute,
+      folder: optionsFolder,
+      mergeDependencies: mergeDependencies,
+      language: language,
+      applicationFolder: applicationFolder,
+      replaceFiles: replaceFiles
+    } as T;
+
+    await this.startAdapter(customConfig);
+
   }
 
+
+  protected abstract startAdapter(config:T) : Promise<void>;//{
+    // const baseAdapter = new BaseAdapter(config);
+    // baseAdapter.init();
+  //}
+
 }
-
-
-
-// new BaseAdapterClient('express-adapter','An express adaptor', '1.0.0', '@basuapi/express-adapter').execute();

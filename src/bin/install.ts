@@ -2,7 +2,7 @@ import { program } from 'commander';
 import packageJson from '../../package.json';
 import { execSync } from 'child_process';
 const packageRunnerName = 'yarn';
-const runCommand = command => {
+const runCommand = (command:string) => {
     try {
         execSync(command, {stdio: 'inherit'})
     }catch(e){
@@ -25,7 +25,7 @@ program.command('install')
     .description('Install the template')
     .argument('<projectname>', "A name for the project")    
     .action((projectName) => {
-        const gitCheckoutCommand = `git clone -b main --depth 1 https://github.com/dprevides/basuapi-template.git ${projectName}`;
+        const gitCheckoutCommand = `git clone -b main --depth 1 https://github.com/dprevides/basuapi-adapter-template.git ${projectName}`;
         const installDepsCommand = `cd ${projectName} && ${packageRunnerName} install`;
         
         console.log(`Clonning the repository`);

@@ -5,13 +5,13 @@ export const packageInfoJson = {
     "license": "MIT",
     "dependencies": {
         "express": "^4.18.1",
-        "@basuapi/api": "latest",
+        "@basuapi/api": "latest"
     },
     "scripts": {
-        "app:install": "cp -fr ../prisma . 2>/dev/null || : && swc src -d api && yarn create:public:folder",
-        "build": "swc src -d api && yarn create:public:folder",
-        "create:public:folder": "mkdir -p public && cp -fr api ./public && cp -fr app ./public && cp -fr package.json ./public && cp -fr node_modules ./public && cp -fr vercel.json ./public",
-        "vercel-build": "yarn build",
+        "build": "yarn clean && yarn create:public:folder && swc src -d api ",
+        "start": "yarn build && node  api/index.js",
+        "start:debug": "yarn build && node --inspect-brk api/index.js",
+        "create:public:folder": "mkdir -p api",
         "clean": "rm -rf api",
     },    
     "devDependencies": {

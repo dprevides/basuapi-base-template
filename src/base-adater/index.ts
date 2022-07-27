@@ -8,6 +8,7 @@ import { swcJson } from "./configs/swcrc";
 import copy from 'recursive-copy';
 import nunjucks from 'nunjucks'
 import { execSync } from 'child_process';
+import { BaseConfig } from '../adapter';
 
 export class CustomAppRoute extends ApplicationRouter{
 
@@ -24,22 +25,29 @@ export class CustomAppRoute extends ApplicationRouter{
     }
 }
 
-export class BaseAdapter{
-    private absoluteRouteFile:string;
-    private routeFile:string;
-    private routeMethod:string;
-
+export class BaseAdapter<T extends BaseConfig>{
+    protected absoluteRouteFile:string;
+    protected routeFile:string;
+    protected routeMethod:string;
+    protected route:string;
+    protected destination:string;
+    protected mergeDependencies:boolean;
+    protected language:string;
+    protected applicationFolder:string;
+    protected name:string;
+    protected replaceFilesInDestination:boolean;
     constructor(
-        route:string,
-        private destination:string,
-        private mergeDependencies:boolean,
-        private language:string,
-        private applicationFolder:string,
-        private name:string,
-        private replaceFilesInDestination:boolean,
-        private config:any
+        protected config:T
     ){
-        const [routeFile,routeMethod] = route.replace('./','').split('.');
+        this.route = config.route;
+        this.destination = config.folder;
+        this.mergeDependencies = config.mergeDependencies;
+        this.language = config.language;
+        this.applicationFolder = config.applicationFolder;
+        this.name = config.name;
+        this.replaceFilesInDestination = config.replaceFiles
+
+        const [routeFile,routeMethod] = this.route.replace('./','').split('.');
         this.routeFile = routeFile;
         this.routeMethod = routeMethod;
         this.absoluteRouteFile = path.join(process.cwd(),routeFile);
@@ -67,7 +75,7 @@ export class BaseAdapter{
         }
     }
 
-    async init(){
+    async init() : Promise<void>{
         const instance = await this.tryAndGetResult(`Getting instance from ${this.routeFile}.${this.routeMethod}`, () => require(this.absoluteRouteFile)[this.routeMethod]);
 
         const customRoutes = new CustomAppRoute(instance).getInfo();

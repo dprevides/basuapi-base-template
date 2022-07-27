@@ -12,3 +12,4 @@
 #.pnp.*
 dist
 adapters
+node_modules
