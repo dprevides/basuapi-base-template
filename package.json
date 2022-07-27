@@ -2,11 +2,14 @@
   "name": "@basuapi/adapter",
   "packageManager": "yarn@3.2.2",
   "bin": "./dist/bin/install.js",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "files": [
     "dist/src/*.js",
+    "dist/src/*.d.ts",
     "dist/src/**/*.js",
-    "dist/src/**/&.js"
+    "dist/src/**/*.d.ts",
+    "dist/src/**/&.js",
+    "dist/src/**/&.d.ts"
   ],
   "scripts": {
     "dev": "concurrently \"npm run watch-compile\" \"npm run watch-dev\"",
